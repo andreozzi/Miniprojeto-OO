@@ -2,7 +2,7 @@
 
 ## Descrição
 
-Este é o nosso projeto de Gerência de Passagens para a disciplina de Orientação a Objetos do curso de Engenharia da Computação da Universidade de Brasília (UnB). Nosso projeto permite o gerenciamento de itinerários e passagens, incluindo a criação, leitura, atualização e exclusão dessas informações. Também é possível buscar itinerários por data, local de origem e local de destino. Este projeto foi desenvolvido em dupla.
+Este é o nosso projeto de Gerência de Passagens para a disciplina de Orientação a Objetos do curso de Engenharia de Software Universidade de Brasília (UnB). Nosso projeto permite o gerenciamento de itinerários e passagens, incluindo a criação, leitura, atualização e exclusão dessas informações. Também é possível buscar itinerários por data, local de origem e local de destino. Este projeto foi desenvolvido em dupla.
 
 ## Funcionalidades
 
