@@ -48,7 +48,7 @@ public class Admin {
     public void buscarPassagensData(LocalDate data){
         List<Passagem> passagensFiltradas = new ArrayList<Passagem>();
         for(Passagem p:passagemLista){
-            if(p.getDate() == data){
+            if(p.getDate().equals(data)){
                 passagensFiltradas.add(p);
             }
         }
@@ -59,7 +59,7 @@ public class Admin {
     public void agendarPassagem(int idPassagem){
         for(Passagem p:passagemLista){
             if(p.getIdPassagem()== idPassagem){
-                System.out.println("Você escolheu a passagem: "+p.toString());
+                System.out.println("Você escolheu a passagem: \n"+p.toString());
             }
         }
     }

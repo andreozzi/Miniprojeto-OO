@@ -32,7 +32,8 @@ public class Passagem extends Itinerario{
     @Override
     public String toString(){
         return "Passagem #"+idPassagem+"\n"
-        +"Data: " +date+"\n"
+                +"Id da Passagem: "+idPassagem+"\n"
+                +"Data: " +date+"\n"
                 +"Local de Origem: "+localOrigem+"\n"+
                 "Local de Destino: "+localDestino;
     }
