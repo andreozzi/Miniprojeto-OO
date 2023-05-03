@@ -57,12 +57,14 @@ public class Program {
                 admin.buscarPassagensData(dataVoo);
                 System.out.println("Digite o id da passagem: ");
                 int idEscolhido = sc.nextInt();
+                sc.nextLine();
                 admin.agendarPassagem(idEscolhido);
 
             }
             else {
                 System.out.println("Digite o id da passagem: ");
                 int idEscolhido = sc.nextInt();
+                sc.nextLine();
                 admin.agendarPassagem(idEscolhido);
             }
         }
@@ -82,6 +84,7 @@ public class Program {
                     String localDestino = sc.nextLine();
                     System.out.println("Digite o Id da passagem: ");
                     int idPassagem = sc.nextInt();
+                    sc.nextLine();
                     System.out.println("Digite o valor da passagem: ");
                     double valorPassagem = sc.nextDouble();
                     admin.criarPassagem(localOrigem,localDestino,dataVoo,idPassagem,valorPassagem);
@@ -89,6 +92,7 @@ public class Program {
                     char resp = sc.next().charAt(0);
                     sc.nextLine();
                     if(resp=='n'){
+                        admin.mostrarPassagens();
                         break;
                     }
                 }
@@ -108,6 +112,7 @@ public class Program {
                     String localDestino = sc.nextLine();
                     System.out.println("Digite o Id da passagem: ");
                     int idPassagem = sc.nextInt();
+                    sc.nextLine();
                     System.out.println("Digite o valor da passagem: ");
                     double valorPassagem = sc.nextDouble();
                     admin.atualizarPassagem( idantigo,localOrigem,localDestino,dataVoo,idPassagem,valorPassagem);
@@ -115,17 +120,21 @@ public class Program {
                     char respos = sc.next().charAt(0);
                     sc.nextLine();
                     if(respos=='n'){
+                        admin.mostrarPassagens();
                         break;
                     }
                     else if (resposta == 'd') {
                         while (true){
                             System.out.println("Digite o id da passagem a ser deletada: ");
                             int idDel = sc.nextInt();
+                            sc.nextLine();
                             admin.deletarPassagem(idDel);
+                            admin.mostrarPassagens();
                             System.out.println("Deseja deletar outra passagem?(s/n)");
                             char respostinha = sc.next().charAt(0);
                             sc.nextLine();
                             if(respostinha=='n'){
+                                admin.mostrarPassagens();
                                 break;
                             }
                         }

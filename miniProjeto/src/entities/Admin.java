@@ -59,6 +59,7 @@ public class Admin {
     public void agendarPassagem(int idPassagem){
         for(Passagem p:passagemLista){
             if(p.getIdPassagem()== idPassagem){
+                
                 System.out.println("Você escolheu a passagem: \n"+p.toString());
             }
         }
