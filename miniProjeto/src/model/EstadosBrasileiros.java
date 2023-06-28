@@ -1,0 +1,32 @@
+package model;
+
+public enum EstadosBrasileiros {
+    ACRE,
+    ALAGOAS,
+    AMAPA,
+    AMAZONAS,
+    BAHIA,
+    CEARA,
+    DISTRITOFEDERAL,
+    ESPIRITOSANTO,
+    GOIAS,
+    MARANHAO,
+    MATOGROSSODOSUL,
+    MATOGROSSO,
+    MINASGERAIS,
+    PARA,
+    PARAIBA,
+    PARANA,
+    PERNAMBUCO,
+    PIAUI,
+    RIODEJANEIRO,
+    RIOGRANDEDONORTE,
+    RIOGRANDEDOSUL,
+    RONDONIA,
+    RORAIMA,
+    SANTACATARINA,
+    SAOPAULO,
+    SERGIPE,
+    TOCANTINS
+
+    }
