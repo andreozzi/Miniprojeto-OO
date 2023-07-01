@@ -47,7 +47,7 @@ public class PassageiroView {
 			}
 		});
 
-		// Create the search button
+
 		botaoPesquisar = new JButton("Buscar");
 		botaoPesquisar.setBounds(20, 50, 80, 30);
 		botaoPesquisar.addActionListener(new ActionListener() {
@@ -57,7 +57,7 @@ public class PassageiroView {
 			}
 		});
 
-		// Create the list of itinerarios
+
 		DefaultListModel<String> listaItinerariosView = new DefaultListModel<>();
 
 		List<String> listaItinerarios = controleAdmin.getListaItinerarios();
@@ -69,13 +69,13 @@ public class PassageiroView {
 		scrollDaLista = new JScrollPane(itinerariosLista);
 		scrollDaLista.setBounds(50, 100, 300, 100);
 
-		// Add components to the frame
+
 		frame.add(titulo);
 		frame.add(botaoVoltar);
 		frame.add(botaoPesquisar);
 		frame.add(scrollDaLista);
 
-		// Make the frame visible
+
 		frame.setVisible(true);
 	}
 

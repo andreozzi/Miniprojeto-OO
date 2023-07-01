@@ -127,7 +127,7 @@ public class GerenteViewItinerario {
         janela.pack();
         janela.setVisible(true);
 
-        // Add action listeners for buttons as needed
+
 
         voltarButton.addActionListener(new ActionListener() {
             @Override
