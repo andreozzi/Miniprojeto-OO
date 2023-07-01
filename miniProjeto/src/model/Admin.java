@@ -23,31 +23,25 @@ public class Admin extends Usuario {
         this.listaItinerarios = new ArrayList<Itinerario>();
     }
 
-    public void criarPassagem(Itinerario itinerario, int idPassagem, double preco){
+    public void criarPassagem(Itinerario itinerario, double preco){
+        int idPassagem = passagemLista.size();
         Passagem p = new Passagem(idPassagem,preco,itinerario);
         passagemLista.add(p);
 
     }
-    public void deletarPassagem(int idPassagem){
-        for (Passagem p:passagemLista) {
-            if(p.getIdPassagem() == idPassagem){
-                passagemLista.remove(p);
-            }
 
-        }
+    public void deletarPassagem(int index){
+        passagemLista.remove(index);
+
     }
-    public void atualizarPassagem(int idPassagemAntigo, Itinerario itinerario, int idPassagem, double preco){
-        for(Passagem passagem:passagemLista){
-            if(passagem.getIdPassagem()==idPassagemAntigo){
-                passagemLista.remove(passagem);
-                Passagem p = new Passagem(idPassagem,preco,itinerario);
-                passagemLista.add(p);
-            }
-        }
+    public void atualizarPassagem(int index, EstadosBrasileiros origem, EstadosBrasileiros destino,LocalDate date, double preco){
+        passagemLista.remove(index);
+        passagemLista.add(index, new Passagem(index, preco,new Itinerario(origem,destino,date)));
+
 
 
     }
-    public List<String> mostrarPassagens(){
+    public List<String> getPassagens(){
         List<String> passagens = new ArrayList<>();
         for(Passagem p:passagemLista){
             passagens.add(p.toString());
@@ -103,34 +97,25 @@ public class Admin extends Usuario {
         listaItinerarios.add(itinerario);
 
     }
-    public void deletarItinerario(EstadosBrasileiros origemItinerario,EstadosBrasileiros destinoItinerario, LocalDate data){
-        for (Itinerario i:listaItinerarios) {
-            if (i.getLocalDestino().equals(destinoItinerario) && i.getLocalOrigem().equals(origemItinerario) && i.getDate().equals(data)){
-                for (Passagem p:passagemLista) {
-                    if(p.getItinerario().equals(i)){
-                        passagemLista.remove(p);
-                    }
-                }
-                listaItinerarios.remove(i);
+    public void deletarItinerario(int index){
+        listaItinerarios.remove(index);
+        for(Passagem p : passagemLista){
+            if (listaItinerarios.get(index).equals(p.getItinerario())){
+                listaItinerarios.remove(p);
             }
         }
+
+
     }
 
-    public void atualizarItinerario(EstadosBrasileiros origemItinerario,EstadosBrasileiros destinoItinerario,LocalDate date, EstadosBrasileiros novaOrigem, EstadosBrasileiros novoDestino, LocalDate novaData){
-        for (Itinerario i:listaItinerarios) {
-            if (i.getLocalDestino().equals(destinoItinerario) && i.getLocalOrigem().equals(origemItinerario) && i.getDate().equals(date)){
-                for (Passagem p:passagemLista) {
-                    if(p.getItinerario().equals(i)){
-                        passagemLista.remove(p);
-                    }
-                }
-                listaItinerarios.remove(i);
-                Itinerario itinerario = new Itinerario(novaOrigem,novoDestino, novaData);
-                listaItinerarios.add(itinerario);
-            }
-        }
+    public void atualizarItinerario(EstadosBrasileiros novaOrigem, EstadosBrasileiros novoDestino, LocalDate novaData, int index){
+
+        listaItinerarios.remove(index);
+        Itinerario i = new Itinerario(novaOrigem, novoDestino, novaData);
+        listaItinerarios.add(index,i);
+
     }
-    public List<String> mostrarItinerarios(){
+    public List<String> getItinerarios(){
         List<String> itinerarios = new ArrayList<>();
         for(Itinerario i:listaItinerarios) {
             itinerarios.add(i.toString());
@@ -139,7 +124,7 @@ public class Admin extends Usuario {
     }
     public void criarDados(){
         Random random = new Random();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 1; i < 20; i++) {
             int indexOrigem = random.nextInt(EstadosBrasileiros.values().length);
             int indexDestino = random.nextInt(EstadosBrasileiros.values().length);
             EstadosBrasileiros randomOrigem = EstadosBrasileiros.values()[indexOrigem];

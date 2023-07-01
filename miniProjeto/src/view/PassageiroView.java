@@ -1,12 +1,17 @@
 package view;
 
 import control.ControleAdmin;
+import model.EstadosBrasileiros;
+import model.Itinerario;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class PassageiroView {
@@ -16,20 +21,22 @@ public class PassageiroView {
 	private JButton botaoPesquisar;
 	private JList<String> itinerariosLista;
 	 private JScrollPane scrollDaLista;
+	 private static ControleAdmin controleAdmin;
 
-	public PassageiroView() {
-		// Cria o main frame
+	public PassageiroView(ControleAdmin controleAdmin) {
+		this.controleAdmin = controleAdmin;
+
 		frame = new JFrame("Passageiro View");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(400, 300);
 		frame.setLayout(null);
 
-		// Create the title label
+
 		titulo = new JLabel("Itinerarios");
 		titulo.setFont(new Font("Arial", Font.BOLD, 20));
 		titulo.setBounds(150, 10, 150, 30);
 
-		// Create the back button
+
 		botaoVoltar = new JButton("Voltar");
 		botaoVoltar.setBounds(300, 210, 80, 30);
 		botaoVoltar.addActionListener(new ActionListener() {
@@ -52,8 +59,8 @@ public class PassageiroView {
 
 		// Create the list of itinerarios
 		DefaultListModel<String> listaItinerariosView = new DefaultListModel<>();
-		ControleAdmin c = new ControleAdmin();
-		List<String> listaItinerarios = c.getListaItinerarios();
+
+		List<String> listaItinerarios = controleAdmin.getListaItinerarios();
 		for(String s : listaItinerarios){
 			listaItinerariosView.addElement(s);
 		}
@@ -86,7 +93,8 @@ public class PassageiroView {
 		buscaPorDataButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				showBuscaPorData();
+				frame.dispose();
+				showBuscaPorData(controleAdmin);
 				buscaFrame.setVisible(false);
 			}
 		});
@@ -94,21 +102,27 @@ public class PassageiroView {
 		buscaPorOrigemButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				showBuscaPorOrigem();
+				showBuscaPorOrigem(controleAdmin);
+				frame.dispose();
+				buscaFrame.setVisible(false);
 			}
 		});
 
 		buscaPorDestinoButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				showBuscaPorDestino();
+				showBuscaPorDestino(controleAdmin);
+				frame.dispose();
+				buscaFrame.setVisible(false);
 			}
 		});
 
 		buscaPorTudoButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				showBuscaPorDataOrigemDestino();
+				showBuscaPorDataOrigemDestino(controleAdmin);
+				frame.dispose();
+				buscaFrame.setVisible(false);
 			}
 		});
 
@@ -120,7 +134,7 @@ public class PassageiroView {
 		buscaFrame.setVisible(true);
 	}
 
-	private void showBuscaPorData() {
+	private void showBuscaPorData(ControleAdmin controleAdmin) {
 		JFrame buscaPorDataFrame = new JFrame("Busca por Data");
 		buscaPorDataFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		buscaPorDataFrame.setSize(400, 250);
@@ -140,8 +154,8 @@ public class PassageiroView {
 		JLabel dataLabel = new JLabel("Data: ");
 		painelData.add(dataLabel);
 
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		JFormattedTextField dataTextField = new JFormattedTextField(dateFormat);
+
+		JFormattedTextField dataTextField = new JFormattedTextField("__/__/____");
 		dataTextField.setColumns(10);
 		painelData.add(dataTextField);
 
@@ -149,8 +163,8 @@ public class PassageiroView {
 		painelData.add(botaoBuscar);
 
 		DefaultListModel<String> lista = new DefaultListModel<>();
-		ControleAdmin c = new ControleAdmin();
-		for (String s : c.getListaItinerarios()){lista.addElement(s);}
+
+		for (String s : controleAdmin.getListaItinerarios()){lista.addElement(s);}
 		JList<String> listaView = new JList<>(lista);
 		JScrollPane scrollPane = new JScrollPane(listaView);
 		painelCentral.add(scrollPane, BorderLayout.CENTER);
@@ -166,8 +180,19 @@ public class PassageiroView {
 		botaoBuscar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// Perform the search based on the selected date
-				// ...
+				String dataString = dataTextField.getText();
+				try {
+					List<String> itinerariosFiltrados = controleAdmin.bucarItinerarioData(dataString);
+					lista.clear();
+					for(String s:itinerariosFiltrados){
+						lista.addElement(s);
+					}
+
+				} catch (ParseException ex) {
+					throw new RuntimeException(ex);
+				}
+
+
 			}
 		});
 
@@ -177,6 +202,7 @@ public class PassageiroView {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				buscaPorDataFrame.dispose();
+				new PassageiroView(controleAdmin);
 			}
 
 		});
@@ -184,36 +210,223 @@ public class PassageiroView {
 
 	}
 
-	private void showBuscaPorOrigem() {
+	private void showBuscaPorOrigem(ControleAdmin controleAdmin) {
 		JFrame buscaPorOrigemFrame = new JFrame("Busca por Origem");
 		buscaPorOrigemFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		buscaPorOrigemFrame.setSize(200, 150);
+		buscaPorOrigemFrame.setSize(400, 300);
 
-		// Add components to the frame
-		// ...
+		JLabel titulo = new JLabel("Busca Por Origem:");
+		titulo.setFont(new Font("Arial", Font.BOLD, 20));
+		titulo.setHorizontalAlignment(SwingConstants.CENTER);
+		buscaPorOrigemFrame.add(titulo, BorderLayout.NORTH);
+
+		JPanel painelCentral = new JPanel(new BorderLayout());
+		buscaPorOrigemFrame.add(painelCentral, BorderLayout.CENTER);
+
+		JPanel painelComboBox = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		painelCentral.add(painelComboBox, BorderLayout.NORTH);
+
+		JLabel comboBoxLabel = new JLabel("Origem: ");
+		painelComboBox.add(comboBoxLabel);
+
+		JComboBox<EstadosBrasileiros> origens = new JComboBox<>(EstadosBrasileiros.values());
+		painelComboBox.add(origens);
+
+		JButton botaoBuscar = new JButton("Buscar!");
+		painelComboBox.add(botaoBuscar);
+
+		DefaultListModel<String> lista = new DefaultListModel<>();
+
+		for (String s : controleAdmin.getListaItinerarios()) {
+			lista.addElement(s);
+		}
+		JList<String> listaView = new JList<>(lista);
+		JScrollPane scrollPane = new JScrollPane(listaView);
+		painelCentral.add(scrollPane, BorderLayout.CENTER);
+
+		JButton voltarButton = new JButton("Voltar");
+		buscaPorOrigemFrame.add(voltarButton, BorderLayout.SOUTH);
 
 		buscaPorOrigemFrame.setVisible(true);
+
+		botaoBuscar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				EstadosBrasileiros estadoSelecionado = (EstadosBrasileiros) origens.getSelectedItem();
+				List<String> itinerariosFiltrados = controleAdmin.bucarItinerarioLocal(estadoSelecionado);
+				lista.clear();
+				for(String s:itinerariosFiltrados){
+					lista.addElement(s);
+				}
+			}
+		});
+
+		voltarButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				buscaPorOrigemFrame.dispose();
+				new PassageiroView(controleAdmin);
+			}
+
+		});
+
+
 	}
 
-	private void showBuscaPorDestino() {
-		JFrame buscaPorDestinoFrame = new JFrame("Busca por Destino");
+	private void showBuscaPorDestino(ControleAdmin controleAdmin) {
+		JFrame buscaPorDestinoFrame = new JFrame("Busca por Origem");
 		buscaPorDestinoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		buscaPorDestinoFrame.setSize(200, 150);
+		buscaPorDestinoFrame.setSize(400, 300);
 
-		// Add components to the frame
-		// ...
+		JLabel titulo = new JLabel("Busca Por Destino:");
+		titulo.setFont(new Font("Arial", Font.BOLD, 20));
+		titulo.setHorizontalAlignment(SwingConstants.CENTER);
+		buscaPorDestinoFrame.add(titulo, BorderLayout.NORTH);
+
+		JPanel painelCentral = new JPanel(new BorderLayout());
+		buscaPorDestinoFrame.add(painelCentral, BorderLayout.CENTER);
+
+		JPanel painelComboBox = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		painelCentral.add(painelComboBox, BorderLayout.NORTH);
+
+		JLabel comboBoxLabel = new JLabel("Destino: ");
+		painelComboBox.add(comboBoxLabel);
+
+		JComboBox<EstadosBrasileiros> destinos = new JComboBox<>(EstadosBrasileiros.values());
+		painelComboBox.add(destinos);
+
+		JButton botaoBuscar = new JButton("Buscar!");
+		painelComboBox.add(botaoBuscar);
+
+		DefaultListModel<String> lista = new DefaultListModel<>();
+
+		for (String s : controleAdmin.getListaItinerarios()) {
+			lista.addElement(s);
+		}
+		JList<String> listaView = new JList<>(lista);
+		JScrollPane scrollPane = new JScrollPane(listaView);
+		painelCentral.add(scrollPane, BorderLayout.CENTER);
+
+		JButton voltarButton = new JButton("Voltar");
+		buscaPorDestinoFrame.add(voltarButton, BorderLayout.SOUTH);
 
 		buscaPorDestinoFrame.setVisible(true);
+
+		botaoBuscar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				EstadosBrasileiros estadoSelecionado = (EstadosBrasileiros) destinos.getSelectedItem();
+				List<String> itinerariosFiltrados = controleAdmin.bucarItinerarioLocal(estadoSelecionado);
+				lista.clear();
+				for(String s:itinerariosFiltrados){
+					lista.addElement(s);
+				}
+			}
+		});
+		voltarButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				buscaPorDestinoFrame.dispose();
+				new PassageiroView(controleAdmin);
+
+			}
+		});
 	}
 
-	private void showBuscaPorDataOrigemDestino() {
+	private void showBuscaPorDataOrigemDestino(ControleAdmin controleAdmin) {
 		JFrame buscaPorTudoFrame = new JFrame("Busca por Data, Origem e Destino");
 		buscaPorTudoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		buscaPorTudoFrame.setSize(200, 150);
+		buscaPorTudoFrame.setLayout(new BorderLayout());
+		buscaPorTudoFrame.setSize(600, 400);
 
-		// Add components to the frame
-		// ...
+		JLabel titulo = new JLabel("Busca Por Data, Origem e Destino:");
+		titulo.setFont(new Font("Arial", Font.BOLD, 20));
+		titulo.setHorizontalAlignment(SwingConstants.CENTER);
+		buscaPorTudoFrame.add(titulo, BorderLayout.NORTH);
 
+		JPanel formPanel = new JPanel(new GridBagLayout());
+		GridBagConstraints constraints = new GridBagConstraints();
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.insets = new Insets(5, 5, 5, 5);
+
+		JLabel dataLabel = new JLabel("Data:");
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		formPanel.add(dataLabel, constraints);
+
+		JFormattedTextField dataTextField = new JFormattedTextField("__/__/____");
+		dataTextField.setPreferredSize(new Dimension(120, 25));
+		constraints.gridx = 1;
+		formPanel.add(dataTextField, constraints);
+
+		JLabel origemLabel = new JLabel("Origem:");
+		constraints.gridx = 0;
+		constraints.gridy = 1;
+		formPanel.add(origemLabel, constraints);
+
+		JComboBox<EstadosBrasileiros> origemComboBox = new JComboBox<>(EstadosBrasileiros.values());
+		origemComboBox.setPreferredSize(new Dimension(120, 25));
+		constraints.gridx = 1;
+		formPanel.add(origemComboBox, constraints);
+
+		JLabel destinoLabel = new JLabel("Destino:");
+		constraints.gridx = 0;
+		constraints.gridy = 2;
+		formPanel.add(destinoLabel, constraints);
+
+		JComboBox<EstadosBrasileiros> destinos = new JComboBox<>(EstadosBrasileiros.values());
+		destinos.setPreferredSize(new Dimension(120, 25));
+		constraints.gridx = 1;
+		formPanel.add(destinos, constraints);
+
+
+
+
+		DefaultListModel<String> lista = new DefaultListModel<>();
+		for (String s : controleAdmin.getListaItinerarios()) {
+			lista.addElement(s);
+		}
+		JList<String> listaView = new JList<>(lista);
+		JScrollPane scrollPane = new JScrollPane(listaView);
+		constraints.gridx = 0;
+		constraints.gridy = 4;
+		constraints.gridwidth = 2;
+		constraints.weightx = 1.0;
+		constraints.weighty = 1.0;
+		constraints.fill = GridBagConstraints.BOTH;
+		formPanel.add(scrollPane, constraints);
+
+		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		JButton buscarButton = new JButton("Buscar");
+		buttonPanel.add(buscarButton);
+		JButton voltarButton = new JButton("Voltar");
+		buttonPanel.add(voltarButton);
+		buscaPorTudoFrame.add(buttonPanel, BorderLayout.SOUTH);
+
+		buscaPorTudoFrame.add(formPanel, BorderLayout.CENTER);
+		buscaPorTudoFrame.setVisible(true);
+		buscarButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				DateTimeFormatter d = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+				String dataString = dataTextField.getText();
+				EstadosBrasileiros origem = (EstadosBrasileiros) origemComboBox.getSelectedItem();
+				EstadosBrasileiros destino = (EstadosBrasileiros) destinos.getSelectedItem();
+				List<String> itinerariosFiltrados = controleAdmin.buscarItinerariosRefinado(dataString, origem, destino);
+				lista.clear();
+				for(String s:itinerariosFiltrados){
+					lista.addElement(s);
+				}
+			}
+		});
+		voltarButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				buscaPorTudoFrame.dispose();
+				new PassageiroView(controleAdmin);
+
+			}
+		});
 		buscaPorTudoFrame.setVisible(true);
 	}
 

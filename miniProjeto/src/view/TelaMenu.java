@@ -1,5 +1,7 @@
 package view;
 
+import control.ControleAdmin;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -9,7 +11,12 @@ public class TelaMenu implements ActionListener{
 	private static JLabel tituloInic = new JLabel("Menu Inicial");
 	private static JButton gerente = new JButton("Gerente");
 	private static JButton passageiro = new JButton("Passageiro");
-	
+	public static ControleAdmin controleAdmin;
+
+	static {
+		controleAdmin = new ControleAdmin();
+	}
+
 	public TelaMenu() {
 		tituloInic.setFont(new Font("SansSerif", Font.BOLD, 20));
 		tituloInic.setBounds(153, 20, 120, 30);
@@ -44,20 +51,12 @@ public class TelaMenu implements ActionListener{
 	
 	public void actionPerformed(ActionEvent e) {
 		Object origemEvento = e.getSource();
-		
-		if (origemEvento == gerente)
-			new GerenteView().MostrarDados();
-			
-			/*JOptionPane.showMessageDialog(null, "ainda precisa ser implementada\n"
-					+"as funcionalidades voltadas a\n"
-					+"Gerente",null, 
-					JOptionPane.INFORMATION_MESSAGE);*/
-		if(origemEvento == passageiro)
-			new PassageiroView();
-			/*JOptionPane.showMessageDialog(null, "ainda precisa ser implementada\n"
-					+"as funcionalidades voltadas a\n"
-					+"Passageiro",null, 
-					JOptionPane.INFORMATION_MESSAGE);*/
+		if (origemEvento == gerente) {
+			new PassagemOuItinerario(controleAdmin);
+		}
+		if(origemEvento == passageiro) {
+			new PassageiroView(controleAdmin);
+		}
 	}
 	
 }

@@ -48,9 +48,8 @@ public class Passagem  {
     @Override
     public String toString(){
 
-        return "Passagem #"+idPassagem+"\n"+" "
-                +"Id da Passagem: "+idPassagem+"\n"+" "
-                +"Itinerario: "+itinerario.toString();
+        return "ID:#"+idPassagem+"\n"+" "
+                +itinerario.toString();
 
     }
 }
