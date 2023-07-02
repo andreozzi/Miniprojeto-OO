@@ -149,5 +149,8 @@ public class Admin extends Usuario {
 
 
     }
+    public List<Itinerario> getListaItinerarios(){
+        return listaItinerarios;
+    }
 
 }
