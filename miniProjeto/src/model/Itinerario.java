@@ -16,9 +16,7 @@ public class  Itinerario {
         this.date = date;
     }
 
-    public Itinerario() {
 
-    }
 
     public LocalDate getDate() {
         return date;
